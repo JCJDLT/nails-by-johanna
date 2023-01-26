@@ -1,0 +1,103 @@
+body {
+  font-family: "Oswald", sans-serif;
+  overflow: hidden;
+  height: 100vh;
+  overflow-y: scroll;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background: linear-gradient(rgba(134, 118, 118, 0.8), rgba(43, 41, 41, 0.9));
+  background-size: 200% 200%;
+  animation: gradient 15s ease infinite;
+}
+
+.index {
+  width: 100vw;
+  height: 90vh;
+}
+
+.navbar {
+  background: rgb(209, 158, 158) !important;
+}
+
+.nav-link {
+  color: #fff !important;
+}
+
+.bg-image {
+  color: white;
+  min-height: 30rem;
+  width: 100%;
+  height: 100%;
+  padding-top: 8rem;
+  padding-bottom: 8rem;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.bg-signin-signup {
+  background: rgb(209, 158, 158);
+}
+
+.bg-color-button {
+  background: rgb(209, 158, 158);
+  color: white;
+}
+
+.bg-color-button-signin {
+  background: rgba(67, 63, 63, 0.9);
+  color: white;
+}
+
+.masthead h1 {
+  font-size: 4rem;
+  margin: 0;
+  padding: 0;
+}
+
+@media (min-width: 992px) {
+  .masthead {
+    height: 100vh;
+  }
+
+  .masthead h1 {
+    font-size: 5.5rem;
+  }
+}
+
+#galeria img{
+  width: 100%;
+}
+
+/**/
+.container{
+  color: white;
+}
+
+.portfolio-menu{
+	text-align:center;
+}
+
+.portfolio-menu ul li{
+	display:inline-block;
+	margin:0;
+	list-style:none;
+	padding:10px 15px;
+	cursor:pointer;
+	-webkit-transition:all 05s ease;
+	-moz-transition:all 05s ease;
+	-ms-transition:all 05s ease;
+	-o-transition:all 05s ease;
+	transition:all .5s ease;
+}
+
+.portfolio-item .item{
+	float:left;
+	margin-bottom:10px;
+}
