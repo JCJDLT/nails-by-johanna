@@ -30,7 +30,11 @@
               Opciones
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="/add">Agendar cita</a>
+              {{!#compare user.fullname Juan operator="=="}}
+                <a class="dropdown-item" href="/appointment">Lista de citas</a>
+                <div class="dropdown-divider"></div>
+              {{!/compare}}
+              <a class="dropdown-item" href="/appointment/add">Agendar cita</a>
               <div class="dropdown-divider"></div>
               <a class="dropdown-item" href="/profile">Perfil</a>
             </div>
