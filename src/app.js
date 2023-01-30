@@ -28,41 +28,26 @@ app.engine(
       layoutsDir: path.join(app.get("views"), "layouts"),
       partialsDir: path.join(app.get("views"), "partials"),
       extname: ".hbs",
-      helpers: {
-        compare: (lvalue, rvalue, options) => {
-
-          if (arguments.length < 3)
-              throw new Error("Handlerbars Helper 'compare' needs 2 parameters");
-        
-          var operator = options.hash.operator || "==";
-        
-          var operators = {
-              '==':       function(l,r) { return l == r; },
-              '===':      function(l,r) { return l === r; },
-              '!=':       function(l,r) { return l != r; },
-              '<':        function(l,r) { return l < r; },
-              '>':        function(l,r) { return l > r; },
-              '<=':       function(l,r) { return l <= r; },
-              '>=':       function(l,r) { return l >= r; },
-              'typeof':   function(l,r) { return typeof l == r; }
+      helpers:{
+          foo: function () { return console.log('test'); },
+          when: function(operand_1, operator, operand_2, options) {
+            var operators = {
+             'eq': function(l,r) { return l == r; },
+             'noteq': function(l,r) { return l != r; },
+             'gt': function(l,r) { return Number(l) > Number(r); },
+             'or': function(l,r) { return l || r; },
+             'and': function(l,r) { return l && r; },
+             '%': function(l,r) { return (l % r) === 0; }
+            }
+            , result = operators[operator](operand_1,operand_2);
+          
+            if (result) return options.fn(this);
+            else  return options.inverse(this);
           }
-        
-          if (!operators[operator])
-              throw new Error("Handlerbars Helper 'compare' doesn't know the operator "+operator);
-        
-          var result = operators[operator](lvalue,rvalue);
-        
-          if( result ) {
-              return options.fn(this);
-          } else {
-              return options.inverse(this);
-          }
-        
-        }
-      } 
+      }
     }).engine
   );
-  app.set("view engine", ".hbs");
+app.set("view engine", ".hbs");
 
 // Middlewares
 app.use(morgan("dev"));
