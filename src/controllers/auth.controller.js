@@ -3,14 +3,19 @@ import { encryptPassword } from "../lib/helpers.js";
 import { pool } from "../database.js";
 
 export const renderSignUp = (req, res) => {
-  res.render("auth/signup");
+  const { fullname, email, phone} = req.query;
+  res.render("auth/signup", {
+    fullname,
+    email,
+    phone,
+  });
 };
 
 export const signUp = async (req, res, next) => {
   const { fullname, email, phone, password1, password2 } = req.body;
   if (password1 !== password2) {
     req.flash("message", "Las contraseñas no coinciden");
-    return res.redirect("/signup");
+    return res.redirect("/signup?fullname=" + fullname +"&email="+ email + "&phone="+ phone);
   }
 
   const newUser = {
@@ -35,11 +40,12 @@ export const signUp = async (req, res, next) => {
     });
     
   } catch (error) {
-    if (error.code === 'ER_DUP_ENTRY') {
-      req.flash("error", "El email o numero telefonico ya existen");
-      return res.redirect("/signup");
+    if (error.code === 'ER_DUP_ENTRY' && error.sqlMessage.includes('users.email_UNIQUE')) {
+      req.flash("error", "El email ya existe");
+      return res.redirect("/signup?fullname=" + fullname +"&email="+ email + "&phone="+ phone);
     } else {
-      console.log(error.message);
+      req.flash("error", "El numero telefonico ya existe");
+      return res.redirect("/signup?fullname=" + fullname +"&email="+ email + "&phone="+ phone);
     }
   }
 }
