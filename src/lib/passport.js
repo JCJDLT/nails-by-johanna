@@ -18,7 +18,7 @@ passport.use(
         [email]
       );
 
-      if (!rows.length) return done(null, false, req.flash("error", "No user found"));
+      if (!rows.length) return done(null, false, req.flash("error", "Usuario no encontrado"));
 
       const user = rows[0];
       const validPassword = await helpers.matchPassword(
@@ -26,7 +26,7 @@ passport.use(
         user.password
       );
 
-      if (!validPassword) return done(null, false, req.flash("error", "Incorrect Password"));
+      if (!validPassword) return done(null, false, req.flash("error", "Contraseña incorrecta"));
 
       done(null, user, req.flash("success", "Welcome " + user.username));
     }

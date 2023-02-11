@@ -1,7 +1,7 @@
 export const renderAppointments = (req, res, next) => {
-    res.render("citas/list");
+    res.render("appointment/list");
 };
 
 export const renderAppointmentsAdd = (req, res, next) => {
-    res.render("citas/add");
+    res.render("appointment/add");
 };
