@@ -1,3 +1,57 @@
-Agregar cita
+<div class="container p-4">
+  <div class="row">
+    <div class="col-md-4 mx-auto">
+      <form class="card card-body bg-signin-signup text-white p-4" action="/appointment/add" method="POST">
+        <h3 class="text-center fw-bold mb-4">Agendar cita</h3>
 
-<input type="datetime-local">
+        <label for="date">Selecciona la fecha</label>
+        <input type="date" name="date" class="form-control mb-3" />
+
+        <label for="time">Selecciona la hora:</label>
+        <input type="time" name="time" class="form-control mb-3" />
+
+        <label for="nails">Tipo de uñas:</label>
+        <select name="nails" id="nails" class="form-select" aria-label="Default select example">
+          <option selected>Abre este menu de selección</option>
+          <option value="polygel">Polygel</option>
+          <option value="acrilico">Acrílico</option>
+          <option value="pressOn">Press on</option>
+          <option value="semipermanente">Semipermanente</option>
+          <option value="tradicional">Tradicional</option>
+        </select>
+        <label for="price">Precio</label>
+        <input type="float" name="price" id="price" placeholder="$" class="form-control mb-3" readonly />
+
+        <button class="btn bg-color-button-signin btn-block">
+          Registrate
+        </button>
+    </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  const nails = document.getElementById('nails');
+  const price = document.getElementById('price');
+  nails.addEventListener('change', () => {
+    switch (nails.value) {
+      case 'polygel':
+        price.value = '$80.000';
+        break;
+      case 'acrilico':
+        price.value = '$60.000';
+        break;
+      case 'pressOn':
+        price.value = '$70.000';
+        break;
+      case 'semipermanente':
+        price.value = '$50.000';
+        break;
+      case 'tradicional':
+        price.value = '$40.000';
+        break;
+      default:
+        price.value = '';
+    }
+  });
+</script>

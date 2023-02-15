@@ -51,15 +51,28 @@ export const signUp = async (req, res, next) => {
 }
 
 export const renderSignIn = (req, res, next) => {
-  res.render("auth/signin");
+  const {username} = req.query;
+  res.render("auth/signin", {
+    username,
+  });
 };
 
-export const signIn = passport.authenticate("local.signin", {
+/*export const signIn = passport.authenticate("local.signin", {
   successRedirect: "/profile",
-  failureRedirect: "/signin",
+  failureRedirect: "/signin?username=",
   failureMessage: true,
   failureFlash: true,
-});
+});*/
+
+export const signIn = (req, res, next) => {
+  passport.authenticate('local.signin', {
+    successRedirect: '/profile',
+    failureRedirect: '/signin?username='+req.body.email,
+    failureMessage: true,
+    failureFlash: true,
+  })(req, res, next);
+};
+
 
 export const logout = (req, res, next) => {
   req.logout(function (err) {
