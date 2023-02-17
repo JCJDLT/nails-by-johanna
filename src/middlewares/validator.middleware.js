@@ -9,3 +9,13 @@ export const validator = (req, res, next) => {
     }
     next();
 }
+
+export const validatorApointment = (req, res, next) => {
+    const {date} = req.body;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        req.flash('errors', errors.array().map(error => error.msg));
+        return res.status(400).redirect(req.originalUrl+"?date=" + date);
+    }
+    next();
+}

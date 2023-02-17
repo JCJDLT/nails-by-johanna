@@ -21,11 +21,11 @@ export const signUp = async (req, res, next) => {
   const newUser = {
     fullname,
     email,
+    phone,
   };
 
   newUser.password = await encryptPassword(password1);
-  newUser.idRol = 2;
-  newUser.phone = phone;
+  newUser.id_rol = 2;
 
   try {
     // Saving in the Database
