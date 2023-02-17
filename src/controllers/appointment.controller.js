@@ -8,12 +8,9 @@ export const renderAppointments = (req, res, next) => {
 export const renderAppointmentsAdd = async (req, res, next) => {
     const selectedItem = req.query.selectedItem;
     if (selectedItem == null) {
-        //res.render('appointment/add');
-        const { date, time, nails } = req.query;
+        const { date } = req.query;
         res.render('appointment/add', {
             date,
-            time,
-            nails,
         });
     } else {
         const [result] = await pool.query("SELECT * FROM nails WHERE name = ?", [selectedItem]);
