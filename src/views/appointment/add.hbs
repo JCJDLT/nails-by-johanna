@@ -5,10 +5,10 @@
         <h3 class="text-center fw-bold mb-4">Agendar cita</h3>
 
         <label for="date">Selecciona la fecha</label>
-        <input type="date" name="date" class="form-control mb-3" value="{{date}}"/>
+        <input type="date" name="date" class="form-control mb-3" min="{{getFechaActual}}" value="{{date}}"/>
 
         <label for="start_time">Selecciona la hora:</label>
-        <input type="time" name="start_time" class="form-control mb-3"/>
+        <input type="time" name="start_time" class="form-control mb-3" />
 
         <label for="nails">Tipo de uñas:</label>
         <select name="nails" id="nails" class="form-select" aria-label="Default select example">
@@ -27,7 +27,6 @@
         </button>
     </div>
     </form>
-  </div>
 </div>
 
 <script>
