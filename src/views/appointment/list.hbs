@@ -1,1 +1,46 @@
-list
+<div class="container p-4">
+    <div class="row">
+        {{#each links}}
+        <div class="col-md-3 p-2">
+            <div class="card text-center bg-dark text-light">
+                <div class="card-body">
+                    <label for="text">Cliente</label>
+                    <input type="text" class="form-control mb-3" value="{{fullname}}" readonly />
+
+                    <label for="text">Fecha</label>
+                    <input type="date" class="form-control mb-3" value="{{dateFormat date 'YYYY-MM-DD'}}" readonly />
+                    
+                    <label for="text">Hora</label>
+                    <input type="time" class="form-control mb-3" value="{{start_time}}" readonly />
+
+                    <label for="text">Tipo uñas</label>
+                    <input type="text" class="form-control mb-3" value="{{name}}"
+                    readonly />
+
+                    <label for="text">Precio</label>
+                    <input type="text" class="form-control mb-3" value="{{price}}"
+                    readonly />
+
+                    <label for="text">Estado</label>
+                    <input type="text" class="form-control mb-3" value="{{state}}"
+                    readonly />
+
+                    <a class="btn btn-danger" href="/appointment/delete/{{id}}">
+                        Delete Link
+                    </a>
+                    <a class="btn btn-secondary" href="/appointment/edit/{{id}}">
+                        Edit
+                    </a>
+                </div>
+            </div>
+        </div>
+        {{else}}
+        <div class="col-md-4 mx-auto">
+            <div class="card card-body text-center bg-dark text-light">
+                <p>No hay citas pendientes</p>
+                <a href="/appointment/add" class="text-success">Agend Una!</a>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</div>

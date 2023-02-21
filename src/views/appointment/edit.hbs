@@ -1,0 +1,55 @@
+<div class="container p-4">
+  <div class="row">
+    <div class="col-md-4 mx-auto">
+      <div class="card bg-dark border border-dark">
+        <div class="card-body">
+          <form action="/appointment/edit/{{appointment.id}}" method="POST">
+            <h3 class="text-center fw-bold mb-4">Agendar cita</h3>
+
+            <label for="date">Selecciona la fecha</label>
+            <input type="date" name="date" class="form-control mb-3" min="{{getFechaActual}}"
+              value="{{dateFormat appointment.date 'YYYY-MM-DD'}}" />
+
+            <label for="start_time">Selecciona la hora:</label>
+            <input type="time" name="start_time" class="form-control mb-3" value="{{appointment.start_time}}" />
+
+            <label for="nails">Tipo de uñas:</label>
+            <select name="nails" id="nails" class="form-select" aria-label="Default select example">
+              <option selected>Abre este menu de selección</option>
+              <option value="polygel">Polygel</option>
+              <option value="acrilico">Acrílico</option>
+              <option value="pressOn">Press on</option>
+              <option value="semipermanente">Semipermanente</option>
+              <option value="tradicional">Tradicional</option>
+            </select>
+            <label for="price">Precio</label>
+            <input type="float" name="price" id="price" placeholder="$" class="form-control mb-3" readonly />
+            <div class="form-group">
+              <button class="btn btn-success btn-block">
+                Save
+              </button>
+            </div>
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+  const selectedItem = document.getElementById('nails')
+  const myInput = document.querySelector('#price');
+  selectedItem.addEventListener('change', () => {
+    const xhr = new XMLHttpRequest();
+    const url = `/appointment/edit/{{appointment.id}}/?selectedItem=${selectedItem.value}`;
+    xhr.open('GET', url);
+    xhr.onload = () => {
+      const response = JSON.parse(xhr.responseText);
+      const nuevoValor = response.resultado;
+      // Actualiza el valor del campo de texto
+      myInput.value = nuevoValor;
+    };
+    xhr.send();
+  });
+</script>

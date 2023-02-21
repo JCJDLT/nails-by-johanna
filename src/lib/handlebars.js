@@ -1,4 +1,5 @@
 import { format } from "timeago.js";
+import moment from "moment/moment.js";
 
 export const timeago = (savedTimestamp) => format(savedTimestamp);
 
@@ -15,4 +16,8 @@ export const funciones = (operand_1, operator, operand_2, options) => {
 
     if (result) return options.fn(this);
     else return options.inverse(this);
+}
+
+export const dateFormat = (date, format) => {
+    return moment(date).format(format);
 }

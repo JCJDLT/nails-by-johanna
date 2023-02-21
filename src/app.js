@@ -31,6 +31,7 @@ app.engine(
       helpers:{
           foo: function () { return console.log('test'); },
           when: helpers.funciones,
+          dateFormat: helpers.dateFormat,
       }
     }).engine
   );

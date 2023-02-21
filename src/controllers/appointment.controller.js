@@ -1,8 +1,9 @@
 import { pool } from "../database.js";
-import moment from "moment/moment.js";
+import { sumTime, getFechaActual, getHoraActual } from "../lib/helpers.js";
 
-export const renderAppointments = (req, res, next) => {
-    res.render("appointment/list");
+export const renderAppointments = async (req, res, next) => {
+    const [rows] = await pool.query("SELECT a.id,u.fullname,a.date,a.start_time,n.name,n.price,ap.state FROM appointment a JOIN users u ON a.id_user = u.id JOIN nails n ON a.id_nails = n.id JOIN appointment_state ap ON a.id_state = ap.id WHERE ap.state = 'pendiente'");
+    res.render("appointment/list", { links: rows });
 };
 
 export const renderAppointmentsAdd = async (req, res, next) => {
@@ -15,17 +16,21 @@ export const renderAppointmentsAdd = async (req, res, next) => {
         });
     } else {
         const [result] = await pool.query("SELECT * FROM nails WHERE name = ?", [selectedItem]);
-        const resultado = result[0].price;
-        res.json({ resultado });
+        var resultado;
+        if (result.length > 0) {
+            resultado = result[0].price;
+        } else {
+            resultado = null;
+        }
+        res.json({ resultado })
     }
 };
 
 export const addAppointments = async (req, res, next) => {
 
     const { date, start_time, nails } = req.body;
-
-    console.log(start_time);
     //Validations
+
     if (start_time < getHoraActual() && date == getFechaActual()) {
         req.flash("message", "Debes agendar la cita minimo 30 minutos despues de la hora actual");
         return res.redirect("/appointment/add?date=" + date);
@@ -43,31 +48,67 @@ export const addAppointments = async (req, res, next) => {
     const [result] = await pool.query("SELECT * FROM nails WHERE name = ?", [nails]);
     newAppointment.id_nails = result[0].id;
 
-    newAppointment.end_time = sumTime(start_time, result[0].duration);
+    const end_time = sumTime(start_time, result[0].duration);
+    newAppointment.end_time = end_time;
 
     console.log(newAppointment);
-    //await pool.query("INSERT INTO appointment SET ? ", newAppointment);
-    res.redirect(req.originalUrl + "?getFechaActual=" + getFechaActual());
+    const [resultApp] = await pool.query("SELECT * FROM appointment WHERE start_time < ? AND end_time > ? AND date = ?", [end_time, start_time, date]);
+    console.log(resultApp);
+
+    if (resultApp.length > 0) {
+        req.flash("message", "El horario escogido no esta disponible");
+        res.redirect(req.originalUrl + "?getFechaActual=" + getFechaActual() + "&date=" + date);
+    } else {
+        //await pool.query("INSERT INTO appointment SET ? ", newAppointment);
+        req.flash("message", "Melo Pai");
+        res.redirect(req.originalUrl + "?getFechaActual=" + getFechaActual());
+    }
+};
+// CODIGO NUEVO
+export const deleteAppointment = async (req, res) => {
+    const { id } = req.params;
+    console.log(id)
+    // await pool.query("DELETE FROM links WHERE ID = ?", [id]);
+    req.flash("success", "La cita se ha cancelado correctamente");
+    if (req.user.id_rol == 1) {
+        res.redirect("/appointment");
+    } else {
+        res.redirect("/profile");
+    }
 };
 
-export const sumTime = (start_time, end_time) => {
-    const momentTime1 = moment(start_time, 'hh:mm');
-    const sum = momentTime1.add(end_time);
-    const resultT = sum.format('HH:mm');
-    return resultT;
-}
+export const renderEditAppointment = async (req, res) => {
+    const { id } = req.params;
+    const selectedItem = req.query.selectedItem;
+    const [rows] = await pool.query("SELECT * FROM appointment WHERE id = ?", [id]);
+    
+    if (selectedItem == null) {
+        res.render("appointment/edit", {
+            appointment: rows[0],
+            getFechaActual
+        });
+    } else {
+        const [result] = await pool.query("SELECT * FROM nails WHERE name = ?", [selectedItem]);
+        var resultado;
+        if (result.length > 0) {
+            resultado = result[0].price;
+        } else {
+            resultado = null;
+        }
+        res.json({ resultado })
+    }
+};
 
-export const getFechaActual = () => {
-    const fechaActual = new Date();
-    fechaActual.setDate(fechaActual.getDate() - 1);
-    const fechaMenosUnDia = fechaActual.toISOString().split('T')[0];
-    return fechaMenosUnDia;
-}
-
-export const getHoraActual = () => {
-    const now = new Date();
-    now.setMinutes(now.getMinutes() + 30);
-    const horaActualMenosUnMinuto = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-    console.log(horaActualMenosUnMinuto);
-    return horaActualMenosUnMinuto;
-}
+export const editAppointment = async (req, res) => {
+    const { id } = req.params;
+    const { date, start_time, nails } = req.body;
+    const [result] = await pool.query("SELECT * FROM nails WHERE name = ?", [nails]);
+    const newAppointment = {
+        date,
+        start_time,
+    };
+    newAppointment.id_nails = result[0].id;
+    await pool.query("UPDATE appointment set ? WHERE id = ?", [newAppointment, id]);
+    req.flash("success", "Link Updated Successfully");
+    res.redirect("/profile");
+};
