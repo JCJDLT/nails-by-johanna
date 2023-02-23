@@ -5,10 +5,10 @@
         <h3 class="text-center fw-bold mb-4">Agendar cita</h3>
 
         <label for="date">Selecciona la fecha</label>
-        <input type="date" name="date" class="form-control mb-3" min="{{getFechaActual}}" value="{{date}}"/>
+        <input type="date" name="date" class="form-control mb-3" min="{{getFechaActual}}" value="{{date}}" />
 
         <label for="start_time">Selecciona la hora:</label>
-        <input type="time" name="start_time" class="form-control mb-3"  min="08:00" max="18:00"/>
+        <input type="time" name="start_time" class="form-control mb-3" min="08:00" max="18:00"/>
 
         <label for="nails">Tipo de uñas:</label>
         <select name="nails" id="nails" class="form-select" aria-label="Default select example">
@@ -20,28 +20,27 @@
           <option value="tradicional">Tradicional</option>
         </select>
         <label for="price">Precio</label>
-        <input type="float" name="price" id="price" placeholder="$" class="form-control mb-3"
-          readonly />
+        <input type="float" name="price" id="price" placeholder="$" class="form-control mb-3" readonly />
         <button class="btn bg-color-button-signin btn-block">
           Registrate
         </button>
     </div>
     </form>
-</div>
+  </div>
 
-<script>
-  const selectedItem = document.getElementById('nails')
-  const myInput = document.querySelector('#price');
-  selectedItem.addEventListener('change', () => {
-    const xhr = new XMLHttpRequest();
-    const url = `/appointment/add?selectedItem=${selectedItem.value}`;
-    xhr.open('GET', url);
-    xhr.onload = () => {
-      const response = JSON.parse(xhr.responseText);
-      const nuevoValor = response.resultado;
-      // Actualiza el valor del campo de texto
-      myInput.value = nuevoValor;
-    };
-    xhr.send();
-  });
-</script>
+  <script>
+    const selectedItem = document.getElementById('nails')
+    const myInput = document.querySelector('#price');
+    selectedItem.addEventListener('change', () => {
+      const xhr = new XMLHttpRequest();
+      const url = `/appointment/add?selectedItem=${selectedItem.value}`;
+      xhr.open('GET', url);
+      xhr.onload = () => {
+        const response = JSON.parse(xhr.responseText);
+        const nuevoValor = response.resultado;
+        // Actualiza el valor del campo de texto
+        myInput.value = nuevoValor;
+      };
+      xhr.send();
+    });
+  </script>

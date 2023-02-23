@@ -17,10 +17,8 @@ export const sumTime = (start_time, end_time) => {
 }
 
 export const getFechaActual = () => {
-  const now = new Date();
-  const fechaActual = new Date(now.toLocaleString("en-US", { timeZone: "America/Bogota" }));
-  const fechaActualFormato = fechaActual.toISOString().split('T')[0];
-  return fechaActualFormato;
+  const currentDate = moment().format().split('T')[0];
+  return currentDate;
 }
 
 export const getHoraActual = () => {

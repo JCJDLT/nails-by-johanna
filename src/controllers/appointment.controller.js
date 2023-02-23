@@ -15,14 +15,7 @@ export const renderAppointmentsAdd = async (req, res, next) => {
             getFechaActual,
         });
     } else {
-        const [result] = await pool.query("SELECT * FROM nails WHERE name = ?", [selectedItem]);
-        var resultado;
-        if (result.length > 0) {
-            resultado = result[0].price;
-        } else {
-            resultado = null;
-        }
-        res.json({ resultado })
+        validationPriceNails(selectedItem, res);
     }
 };
 
@@ -57,18 +50,19 @@ export const addAppointments = async (req, res, next) => {
 
     if (resultApp.length > 0) {
         req.flash("message", "El horario escogido no esta disponible");
-        res.redirect(req.originalUrl + "?getFechaActual=" + getFechaActual() + "&date=" + date);
+        res.redirect(req.originalUrl + "?date=" + date);
     } else {
         //await pool.query("INSERT INTO appointment SET ? ", newAppointment);
         req.flash("message", "Melo Pai");
-        res.redirect(req.originalUrl + "?getFechaActual=" + getFechaActual());
+        res.redirect(req.originalUrl);
     }
 };
+
 // CODIGO NUEVO
 export const deleteAppointment = async (req, res) => {
     const { id } = req.params;
     console.log(id)
-    // await pool.query("DELETE FROM links WHERE ID = ?", [id]);
+    await pool.query("DELETE FROM appointment WHERE ID = ?", [id]);
     req.flash("success", "La cita se ha cancelado correctamente");
     if (req.user.id_rol == 1) {
         res.redirect("/appointment");
@@ -81,34 +75,56 @@ export const renderEditAppointment = async (req, res) => {
     const { id } = req.params;
     const selectedItem = req.query.selectedItem;
     const [rows] = await pool.query("SELECT * FROM appointment WHERE id = ?", [id]);
-    
+
     if (selectedItem == null) {
         res.render("appointment/edit", {
             appointment: rows[0],
             getFechaActual
         });
     } else {
-        const [result] = await pool.query("SELECT * FROM nails WHERE name = ?", [selectedItem]);
-        var resultado;
-        if (result.length > 0) {
-            resultado = result[0].price;
-        } else {
-            resultado = null;
-        }
-        res.json({ resultado })
+        validationPriceNails(selectedItem, res);
     }
 };
+
+export const validationPriceNails = async (selectedItem, res) => {
+    const [result] = await pool.query("SELECT * FROM nails WHERE name = ?", [selectedItem]);
+    var resultado;
+    if (result.length > 0) {
+        resultado = result[0].price;
+    } else {
+        resultado = null;
+    }
+    res.json({ resultado })
+}
 
 export const editAppointment = async (req, res) => {
     const { id } = req.params;
     const { date, start_time, nails } = req.body;
-    const [result] = await pool.query("SELECT * FROM nails WHERE name = ?", [nails]);
+
+    if (start_time < getHoraActual() && date == getFechaActual()) {
+        req.flash("message", "Debes agendar la cita minimo 30 minutos despues de la hora actual");
+        return res.redirect("/appointment/edit/" + id);
+    }
     const newAppointment = {
         date,
         start_time,
     };
+
+    const [result] = await pool.query("SELECT * FROM nails WHERE name = ?", [nails]);
     newAppointment.id_nails = result[0].id;
-    await pool.query("UPDATE appointment set ? WHERE id = ?", [newAppointment, id]);
-    req.flash("success", "Link Updated Successfully");
-    res.redirect("/profile");
+
+    const end_time = sumTime(start_time, result[0].duration);
+    newAppointment.end_time = end_time;
+
+    const [resultApp] = await pool.query("SELECT * FROM appointment WHERE start_time < ? AND end_time > ? AND date = ?", [end_time, start_time, date]);
+    console.log(resultApp);
+
+    if (resultApp.length > 0) {
+        req.flash("message", "El horario escogido no esta disponible");
+        res.redirect(req.originalUrl);
+    } else {
+        await pool.query("UPDATE appointment set ? WHERE id = ?", [newAppointment, id]);
+        req.flash("success", "Link Updated Successfully");
+        res.redirect("/profile");
+    }
 };
