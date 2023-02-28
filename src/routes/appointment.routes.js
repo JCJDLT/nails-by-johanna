@@ -7,6 +7,7 @@ import {
     deleteAppointment,
     renderEditAppointment,
     editAppointment,
+    doneAppointment,
 } from "../controllers/appointment.controller.js";
 import { signupSchema } from "../validators/appointmentadd.validator.js";
 import { validatorApointment } from "../middlewares/validator.middleware.js";
@@ -22,6 +23,7 @@ router.get("/add", renderAppointmentsAdd);
 router.post("/add", signupSchema, validatorApointment, addAppointments);
 
 router.get("/delete/:id", deleteAppointment);
+router.get("/done/:id",doneAppointment);
 
 router.get("/edit/:id", renderEditAppointment);
 router.post("/edit/:id", editAppointment);
