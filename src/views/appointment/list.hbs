@@ -9,21 +9,18 @@
 
                     <label for="text">Fecha</label>
                     <input type="date" class="form-control mb-3" value="{{dateFormat date 'YYYY-MM-DD'}}" readonly />
-                    
+
                     <label for="text">Hora</label>
                     <input type="time" class="form-control mb-3" value="{{start_time}}" readonly />
 
                     <label for="text">Tipo uñas</label>
-                    <input type="text" class="form-control mb-3" value="{{name}}"
-                    readonly />
+                    <input type="text" class="form-control mb-3" value="{{name}}" readonly />
 
                     <label for="text">Precio</label>
-                    <input type="text" class="form-control mb-3" value="{{price}}"
-                    readonly />
+                    <input type="text" class="form-control mb-3" value="{{price}}" readonly />
 
                     <label for="text">Estado</label>
-                    <input type="text" class="form-control mb-3" value="{{state}}"
-                    readonly />
+                    <input type="text" class="form-control mb-3" value="{{state}}" readonly />
 
                     <a class="btn btn-primary" href="/appointment/done/{{id}}">
                         Realizada
@@ -40,8 +37,10 @@
         {{else}}
         <div class="col-md-4 mx-auto">
             <div class="card card-body text-center bg-dark text-light">
-                <p>No hay citas pendientes</p>
-                <a href="/appointment/add" class="text-success">Agend Una!</a>
+                <h2>No hay citas pendientes</h2>
+                <a href="/appointment/add" class="btn bg-color-button  m-4">
+                    Agend Una!
+                </a>
             </div>
         </div>
         {{/each}}

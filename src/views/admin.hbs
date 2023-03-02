@@ -1,4 +1,83 @@
-Hola admin
-{{count}}
-{{price}}
-{{nUsers}}
+<div class="container p-4">
+    <div class="row">
+        <div class="col-md-4 mx-auto">
+            <div class="card card-body text-center bg-dark text-light">
+                <h5>Cantidad de citas realizadas : {{count}}</h5>
+            </div>
+        </div>
+        <div class="col-md-4 mx-auto">
+            <div class="card card-body text-center bg-dark text-light">
+                <h5>Cantidad de dinero realizado : ${{price}}</h5>
+            </div>
+        </div>
+        <div class="col-md-4 mx-auto">
+            <div class="card card-body text-center bg-dark text-light">
+                <h5>Cantidad de usuarios : {{nUsers}}</h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container p-4">
+    <div class="row">
+        <div class="col">
+            <canvas id="query1"></canvas>
+        </div>
+        <div class="col">
+            <canvas id="query2"></canvas>
+        </div>
+    </div>
+</div>
+
+<div class="container p-4">
+    <div class="row">
+        <div class="col-md-4 mx-auto">
+            <canvas id="query3"></canvas>
+        </div>
+        <div class="col-md-4 mx-auto">
+            <canvas id="query4"></canvas>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    chartScript({{{ rows }}},'query1','Cantidad de citas','bar')
+    chartScript({{{ rows }}},'query2','Cantidad de años','line')
+    chartScript({{{ rows }}},'query3','Cantidad de citas','pie')
+    chartScript({{{ rows }}},'query4','Cantidad de años','doughnut')
+
+    function chartScript(rows,name,nameLabel,type) {
+
+        const chartData = {
+            labels: rows.map(row => row.mes),
+            datasets: [
+            {
+                label: nameLabel,
+                data: rows.map(row => row.cantidad),
+                borderColor: '#000000',
+                backgroundColor: [
+                'rgba(73, 246, 217)',
+                'rgba(246, 73, 207 )',
+                'rgba(73, 220, 246 )',
+                'rgba(191, 73, 246)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(201, 203, 207, 0.2)'
+                ],
+                borderWidth: 1,
+            }
+            ]
+        };
+
+        const chartConfig = {
+            type: type,
+            data: chartData,
+            options: {
+                ...(type === 'bar' || type === 'line' ? {scales: {y: {beginAtZero: true}}} : {}),
+            }
+        };
+
+        const chart = new Chart(document.getElementById(name), chartConfig);
+    }
+</script>
