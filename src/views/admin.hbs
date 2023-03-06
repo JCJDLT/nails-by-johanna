@@ -42,15 +42,15 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    chartScript({{{ rows }}},'query1','Cantidad de citas','bar')
-    chartScript({{{ rows }}},'query2','Cantidad de años','line')
-    chartScript({{{ rows }}},'query3','Cantidad de citas','pie')
-    chartScript({{{ rows }}},'query4','Cantidad de años','doughnut')
+    chartScript({{{ rows1 }}},'query1','Cantidad de citas por cada mes en el año actual','bar')
+    chartScript({{{ rows2 }}},'query2','Cantidad de dinero recaudado cada mes','line')
+    chartScript({{{ rows3 }}},'query3','Cantidad de uñas por tipo','pie')
+    chartScript({{{ rows4 }}},'query4','Cantidad de dinero por tipo','doughnut')
 
     function chartScript(rows,name,nameLabel,type) {
 
         const chartData = {
-            labels: rows.map(row => row.mes),
+            labels: rows.map(row => row.name),
             datasets: [
             {
                 label: nameLabel,
@@ -61,9 +61,9 @@
                 'rgba(246, 73, 207 )',
                 'rgba(73, 220, 246 )',
                 'rgba(191, 73, 246)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(201, 203, 207, 0.2)'
+                'rgba(73, 246, 217)',
+                'rgba(246, 73, 207 )',
+                'rgba(73, 220, 246 )'
                 ],
                 borderWidth: 1,
             }
